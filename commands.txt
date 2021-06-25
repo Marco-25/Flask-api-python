@@ -1,0 +1,14 @@
+pip install virtualenv 
+virtualenv nome_do_ambiente --python=python3
+source nome_do_ambiente/bin/active -> ativar ambiente virtual
+deactivate - desativar ambiente virtual
+pip install -r requirements.txt -> instala as dependencias atraves do arquivo requirements
+
+pip install Flask-SQLAlchemy 
+pip install flask-jwt-extended 
+pip install requests
+pip install psycopg2-binary
+pip freeze -> listar bibliotecas instaladas
+
+//%cn(nome do usuario) // %h(hash resumida) // %s(o que foi escrito no commit)
+git log --pretty=format:"%cn: %h: %s" 
