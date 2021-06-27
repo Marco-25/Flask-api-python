@@ -16,8 +16,8 @@ class UserModel(database.Model):
     password = database.Column(database.String(100),  nullable=False)
     email = database.Column(database.String(100), unique=True,  nullable=False)
     active = database.Column(database.Boolean,  default=False)
-    created_at = database.Column(database.Date, default=datetime.now())
-    updated_at = database.Column(database.Date, default=datetime.now())
+    created_at = database.Column(database.String(20))
+    updated_at = database.Column(database.String(20))
 
     def __init__(self, name, login, password, email, active):
         self.name = name
@@ -26,6 +26,8 @@ class UserModel(database.Model):
             password.encode('utf8'), bcrypt.gensalt(8))
         self.email = email
         self.active = active
+        self.created_at = datetime.now()
+        self.updated_at = datetime.now()
 
     def json(self):
         return {
@@ -51,7 +53,7 @@ class UserModel(database.Model):
         )
 
     @classmethod
-    def find_user(cls, user_id):
+    def find_user_by_id(cls, user_id):
         user = cls.query.filter_by(user_id=user_id).first()
         if user:
             return user
@@ -71,14 +73,14 @@ class UserModel(database.Model):
         database.session.commit()
 
     @classmethod
-    def find_by_login(cls, login):
+    def find_user_by_login(cls, login):
         user = cls.query.filter_by(login=login).first()
         if user:
             return user
         return None
 
     @classmethod
-    def find_by_email(cls, email):
+    def find_user_by_email(cls, email):
         user = cls.query.filter_by(email=email).first()
         if user:
             return user

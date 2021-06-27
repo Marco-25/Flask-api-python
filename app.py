@@ -2,12 +2,12 @@ from blacklist import BLACKLIST
 from flask import Flask, jsonify
 from flask_restful import Api
 from resources.User import UserConfirm, UserLogin, UserLogout, Users, User, UserRegister
-from resources.News import New, News, RegisterNew, Unsubscribe
+from resources.News import New, News, RegisterNew
+from resources.ReceiveNews import ReceiveNew, Unsubscribe
 
 from flask_jwt_extended import JWTManager
 from datetime import timedelta
 
-from blacklist import BLACKLIST
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
@@ -50,10 +50,12 @@ api.add_resource(UserConfirm, '/confirmed/<int:user_id>')
 # -------------------------------------------------------
 
 api.add_resource(News, '/news')
-api.add_resource(New, '/news/<int:new_id>')
+api.add_resource(New, '/news/<int:new_id>', '/news/<string:type_new>')
 api.add_resource(RegisterNew, '/register_new')
 
-api.add_resource(Unsubscribe, '/unsubscribe/<int:new_id>')
+api.add_resource(Unsubscribe, '/unsubscribe/<int:receive_new_id>')
+api.add_resource(
+    ReceiveNew, '/receive_news/<int:receive_new_id>', '/receive_news')
 
 # -------------------------------------------------------
 

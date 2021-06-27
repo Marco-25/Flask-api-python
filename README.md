@@ -8,16 +8,16 @@
 
 # Noticias
 
-- [] cadastro de noticia
-- [] atualização de noticia
-- [] deleta noticia
-- [] buscar noticia pelo titutlo
-- [] buscar todas as noticias pelo tipo
+- [X] cadastro de noticia
+- [X] atualização de noticia
+- [X] deleta noticia *
+- [x] buscar todas as noticias pelo tipo
 
 # Cadastro para receber noticias
 
-- [] cadastro na lista
-- [] sair da lista
+- [X] cadastro na lista
+- [X] listar todas as noticias de um cliente
+- [X] sair da lista
 
 # Envio de noticias
 

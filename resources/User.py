@@ -27,7 +27,7 @@ class User(Resource):
 
     @jwt_required()
     def get(self, user_id):
-        user = UserModel.find_user(user_id)
+        user = UserModel.find_user_by_id(user_id)
         if user:
             return user.json()
         return {'message': 'user not found.'}, 404
@@ -37,7 +37,7 @@ class User(Resource):
 
         data = self.body.parse_args()
 
-        user = UserModel.find_user(user_id)
+        user = UserModel.find_user_by_id(user_id)
         if user:
             try:
                 user.update_user(data['name'], data['password'])
@@ -49,7 +49,7 @@ class User(Resource):
 
     @jwt_required()
     def delete(self, user_id):
-        user = UserModel.find_user(user_id)
+        user = UserModel.find_user_by_id(user_id)
         if user:
             try:
                 user.delete_user()
@@ -74,13 +74,13 @@ class UserRegister(Resource):
 
         data = body.parse_args()
 
-        if UserModel.find_by_login(data['login']) or data.get('login') is '':
+        if UserModel.find_user_by_login(data['login']) or data.get('login') is '':
             return {'message': f"The login ''{data['login']}'' already exists."}, 400
 
         if data.get('email') is None or data.get('email') is '':
             return {'message': f"The email cannot be left null."}, 400
 
-        if UserModel.find_by_email(data.get('email')):
+        if UserModel.find_user_by_email(data.get('email')):
             return {'message': f"The email ''{data['email']}'' already exists."}, 400
 
         user_object = UserModel(**data)
@@ -88,12 +88,11 @@ class UserRegister(Resource):
         try:
             user_object.save_user()
             user_object.send_confirmation_email()
+            return {'message': 'User created successfully.', 'user': user_object.json()}, 201
         except:
             user_object.delete_user()
             traceback.print_exc()
             return {'message': 'An internal error ocurred to trying to save user.'}, 500
-
-        return {'message': 'User created successfully.', 'user': user_object.json()}, 201
 
 
 class UserLogin(Resource):
@@ -107,7 +106,7 @@ class UserLogin(Resource):
                           help="the field 'password' cannot be left blank.")
 
         data = body.parse_args()
-        user = UserModel.find_by_login(data['login'])
+        user = UserModel.find_user_by_login(data['login'])
 
         data_hashed = bcrypt.hashpw(
             data['password'].encode('utf8'), user.password)
@@ -135,7 +134,7 @@ class UserConfirm(Resource):
 
     @classmethod
     def get(cls, user_id):
-        user = UserModel.find_user(user_id)
+        user = UserModel.find_user_by_id(user_id)
 
         if not user:
             return {'message': f"User id ''{user_id}'' not found."}, 404
